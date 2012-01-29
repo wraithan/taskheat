@@ -1,4 +1,5 @@
-# Django settings for taskheat project.
+import os
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
