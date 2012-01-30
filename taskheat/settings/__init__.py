@@ -10,6 +10,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+print(os.environ)
+
 if 'DATABASE_URL' in os.environ:
     from heroku import *
 else:
