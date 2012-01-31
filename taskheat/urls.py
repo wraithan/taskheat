@@ -14,5 +14,6 @@ urlpatterns = patterns('',
         include(admin.site.urls)),
     url(r'^admin/doc/',
         include('django.contrib.admindocs.urls')),
-
+    url(r'^accounts/',
+        include('django.contrib.auth.urls')),
 )
