@@ -1,14 +1,13 @@
 from core.models import Task
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
-from django.views.generic.list import ListView
+from django.views.generic import TemplateView
 
 
 admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$',
-        ListView.as_view(allow_empty=True,
-                         model=Task),
+        TemplateView.as_view(template_name='core/index.html'),
         name='core_tast_list'),
     url(r'^admin/',
         include(admin.site.urls)),

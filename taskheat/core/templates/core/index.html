@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <table class="calendar">
+  {% if user.is_authenticated %}
   <thead>
     <th>Sunday</th>
     <th>Monday</th>
@@ -57,6 +58,9 @@
       <td>4</td>
     </tr>
   </tbody>
+  {% else %}
+  <p>You should log in so you can see cool stuff</p>
+  {% endif %}
 </table>
 {% endblock content %}
 {% block sidebar %}
