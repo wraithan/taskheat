@@ -2,7 +2,7 @@
 <html>
   <head>
     <link href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css" rel="stylesheet">
-    <title>{{ page_name }}</title>
+    <title>TaskHeat - {{ page_name }}</title>
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -17,7 +17,7 @@
         <div class="container">
           <a class="brand" href="#">Taskheat</a>
           <ul class="nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="{% url 'core_task_list' %}">Tasks</a></li>
           </ul>
 	  <span class="pull-right">
 	    {% if user.is_authenticated %}

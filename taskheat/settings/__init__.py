@@ -110,7 +110,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'taskheat.urls'
 
 TEMPLATE_DIRS = (
-    os.path.abspath(os.path.join(SITE_ROOT, '../templates/')),
+    os.path.abspath(os.path.join(SITE_ROOT, 'templates/')),
 )
 
 INSTALLED_APPS = (

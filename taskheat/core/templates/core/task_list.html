@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<ul>
+{% for task in object_list %}
+<li>{{task.name}} - {{task.temperature}}</li>
+{% endfor %}
+</ul>
+{% endblock content %}

@@ -9,13 +9,14 @@ class Task(models.Model):
     max_weight = models.IntegerField()
     min_weight = models.IntegerField()
     decay_interval = models.IntegerField()
+    owner = models.ForeignKey('auth.User')
 
-    def temperature(self, when):
-        possible_completed_task = self.completedtask_set.filter(
-            when__gte=start).order_by('-when')
+    def temperature(self, when=None):
+        when = when or date.today()
+        completed_task_list = self.completedtask_set.filter().order_by('-when')
 
-        if possible_completed_task.exists():
-            completed_task = possible_greens[0]
+        if completed_task_list.exists():
+            completed_task = completed_task_list[0]
         else:
             completed_task = None
         return self.temperature_calculation(when, completed_task)
@@ -24,19 +25,18 @@ class Task(models.Model):
     def temperature_calculation(self, when, completed_task):
         if completed_task:
             today = date.today()
-            start = today-timedelta(days=self.max_weight+-self.min_weight)
             days_old = (today-completed_task.when).days
-            decayed_value = (completed_task.weight
-                             + (days_old
-                                * self.decay_interval))
+            decayed_amount = (completed_task.weight
+                              + (days_old
+                                 * self.decay_interval))
             if self.decay_interval > 0:
-                if decayed_value < self.max_weight:
-                    return decayed_value
+                if decayed_amount < self.max_weight:
+                    return decayed_amount
                 else:
                     return self.max_weight
             else:
-                if decayed_value > self.min_weight:
-                    return decayed_value
+                if decayed_amount > self.min_weight:
+                    return decayed_amount
                 else:
                     return self.min_weight
         else:
@@ -45,8 +45,15 @@ class Task(models.Model):
             else:
                 return self.min_weight
 
+    def __unicode__(self):
+        return "%s (%d)" % (self.name, self.temperature(date.today()))
 
 class CompletedTask(models.Model):
     task = models.ForeignKey('Task')
     weight = models.IntegerField()
-    when = models.DateField(auto_now_add=True)
+    when = models.DateField(default=date.today)
+
+    def __unicode__(self):
+        return "%d of %s on %s" % (self.weight,
+                                   self.task.name,
+                                   self.when)
