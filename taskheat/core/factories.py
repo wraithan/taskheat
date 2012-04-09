@@ -15,7 +15,7 @@ class TaskFactory(Factory):
     decay_interval = -1
 
 
-class CompletedTask(Factory):
+class CompletedTaskFactory(Factory):
     FACTORY_FOR = CompletedTask
 
     task = LazyAttribute(lambda a: TaskFactory.build())
