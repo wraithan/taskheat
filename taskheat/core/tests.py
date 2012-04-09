@@ -71,3 +71,36 @@ class SimpleTest(TestCase):
         self.assertEqual(task.temperature_calculation(date.today(),
                                                       completed_task),
                          start+days_ago)
+
+    def test_aggregate_completed_tasks(self):
+        task = TaskFactory.build(max_weight=10)
+        completed_task_1 = CompletedTask.build(task=task, weight=5)
+        completed_task_2 = CompletedTask.build(task=task, weight=3)
+
+        self.assertEqual(task.temperature_calculation(date.today(),
+                                                      [completed_task_1,
+                                                       completed_task_2]),
+                         completed_task_1.weight+completed_task_2.weight)
+
+    def test_aggregates_respect_max_weight(self):
+        task = TaskFactory.build(max_weight=10)
+        completed_task_1 = CompletedTask.build(task=task, weight=5)
+        completed_task_2 = CompletedTask.build(task=task, weight=8)
+
+        self.assertEqual(task.temperature_calculation(date.today(),
+                                                      [completed_task_1,
+                                                       completed_task_2]),
+                         task.max_weight)
+
+    def test_aggregates_respect_max_weight_even_decaying(self):
+        yesterday = date.today() - timedelta(days=1)
+        task = TaskFactory.build(max_weight=10)
+        completed_task_1 = CompletedTask.build(when=yesterday, task=task,
+                                               weight=5)
+        completed_task_2 = CompletedTask.build(when=yesterday, task=task,
+                                               weight=8)
+
+        self.assertEqual(task.temperature_calculation(date.today(),
+                                                      [completed_task_1,
+                                                       completed_task_2]),
+                         task.max_weight+task.decay_interval)
