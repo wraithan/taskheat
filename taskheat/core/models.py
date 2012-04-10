@@ -10,20 +10,19 @@ class Task(models.Model):
     min_weight = models.IntegerField()
     decay_interval = models.IntegerField()
     owner = models.ForeignKey('auth.User')
+    created_at = models.DateField(default=date.today)
 
     def temperature(self, when=None):
         when = when or date.today()
         completed_task_list = self.completedtask_set.filter().order_by('-when')
 
-        if completed_task_list.exists():
-            completed_task = completed_task_list[0]
-        else:
-            completed_task = None
-        return self.temperature_calculation(when, completed_task)
+        return self.temperature_calculation(when, completed_task_list)
 
 
-    def temperature_calculation(self, when, completed_task):
-        if completed_task:
+    def temperature_calculation(self, when, completed_task_list):
+        if not completed_task_list:
+            return self.max_weight
+        for completed_task in completed_task_list:
             today = date.today()
             days_old = (today-completed_task.when).days
             decayed_amount = (completed_task.weight
@@ -39,11 +38,6 @@ class Task(models.Model):
                     return decayed_amount
                 else:
                     return self.min_weight
-        else:
-            if self.decay_interval > 0:
-                return self.max_weight
-            else:
-                return self.min_weight
 
     def __unicode__(self):
         return "%s (%d)" % (self.name, self.temperature(date.today()))

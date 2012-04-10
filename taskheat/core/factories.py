@@ -13,7 +13,7 @@ class TaskFactory(Factory):
     max_weight = 2
     min_weight = -10
     decay_interval = -1
-
+    created_at = LazyAttribute(lambda a: date.today())
 
 class CompletedTaskFactory(Factory):
     FACTORY_FOR = CompletedTask
